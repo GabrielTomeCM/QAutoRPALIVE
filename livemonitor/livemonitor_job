@@ -1,0 +1,43 @@
+
+def execute_tests(runCommand, project_folder) {
+    //runCommand = runCommand.replace("browser", browser_name)
+    println("!!!!!!!!!!!!!!!!!!!!!!!Exec: " + runCommand)
+    try {
+        bat """
+            dir
+            set PATH=%PATH%;C:\\Python27\\Lib\\site-packages\\qautorobot\\webframework\\resources
+            cd\\
+            cd %WORKSPACE%\\${project_folder}
+            REM $runCommand
+        """
+    } catch(e) {
+        print e
+    }
+
+}
+
+
+
+node ("master") {
+   try {
+		cleanWs()
+	} catch(e) {
+		println(e)
+	}
+	copyArtifacts(
+          projectName: 'qautocloud-live-transform',
+          filter: "**/*.zip",
+          fingerprintArtifacts: true,
+          selector: [$class: 'SpecificBuildSelector', buildNumber: params.UPSTREAM_BUILD_JOB_NUMBER],
+          target: "",
+          flatten: true
+    )
+	def project_folder = "livemonitor"
+
+	echo "HELLO RUN JOB"
+	test_file = "testi.robot"
+	runCommand = "python -m robot.run -x outputjunit.xml -d test_reports --variable BROWSER:gc tests/" + test_file
+    execute_tests(runCommand, project_folder)
+	//archiveArtifacts artifacts: "${project_folder}/test_reports/log.html, ${project_folder}/test_reports/*.png, ${project_folder}/test_reports/*.ogg", fingerprint: true
+
+}

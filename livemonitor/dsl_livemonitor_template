@@ -1,0 +1,23 @@
+pipelineJob('livemonitortemplate') {
+   definition {
+     triggers {
+		cron('* * * * *')
+	 }
+     concurrentBuild()
+       cps {
+           script(readFileFromWorkspace('livemonitor_job'))
+       }
+
+    logRotator {
+   numToKeep(100)
+   artifactNumToKeep(100)
+   }
+    parameters {
+        stringParam('TEST_FILE', '', 'Robot test file name')
+		stringParam('MONITOR_INTERVAL', '60', 'Minutes. Default 60 minutes.')
+
+    }
+
+
+   }
+}

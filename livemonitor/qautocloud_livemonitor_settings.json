@@ -1,0 +1,12 @@
+{
+    "GenericSettings":
+    {
+		"FeedbackEmail": { "subject": "Automatic mail from livemonitor" , "addresses": "first@c.com,second@c.com"},
+		"FeedbackSlack": { "subject": "Automatic notification", "slack_address": "address", "slack_api_key": "32FSA2SFS3SFFAS"}
+	},
+    "LiveMonitor":
+    {
+      "Monitor_interval": "15",
+      "Monitor_sites": ""
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "Trigger":
+    {
+		"Email": [
+          {
+            "email@c.com":
+            {
+              "username": "username1",
+              "pw": "password1",
+              "matches": [{"type": "subject"}, {"value": "keyword1*" }, {"type": "content"}, {"value": "keyword2*" }]
+            }
+          },
+          {
+            "email2@c.com":
+            {
+              "username": "username2",
+              "pw": "password2",
+              "matches": [{"type": "subject"}, {"value": "keyword*" }, {"type": "content"}, {"value": "keyword2*" }]
+            }
+          }
+      ],
+      "File":
+      {
+
+      }
+
+	},
+    "GenericSettings":
+    {
+		"Monitor_interval": "15",
+		"FeedbackEmail": { "subject": "Automatic mail from livemonitor" , "addresses": "first@c.com,second@c.com"},
+		"FeedbackSlack": { "subject": "Automatic notification", "slack_address": "address", "slack_api_key": "32FSA2SFS3SFFAS"}
+	}
+}

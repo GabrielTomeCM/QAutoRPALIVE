@@ -1,0 +1,44 @@
+import groovy.json.JsonSlurper
+
+
+
+@NonCPS
+def parseJsonText(jsonText) {
+ final slurper = new JsonSlurper()
+ return new HashMap<>(slurper.parseText(new File(pwd() + "\\" + jsonText).text))
+}
+
+def replace_string(filename, original, replaced, writefile) {
+    def dsl_template = readFile(filename)
+    output = dsl_template.replaceAll(original, replaced)
+    println(output)
+    writeFile file: writefile, text: output
+}
+
+pipeline {
+    agent { label 'master' }
+    stages {
+        stage('Example') {
+            steps {
+                script {
+                    job_name = "oma1"
+                    def interval = 60
+                    def output = ""
+                    result = null
+                    file_in_workspace = "qautocloud_livemonitor_settings.json"
+                    result = parseJsonText(file_in_workspace)
+                    interval = result.LiveMonitor.Monitor_interval
+                    result = null
+                    def dsl_template = readFile("dsl_livemonitor_template")
+                    writeFile file: "dsl_livemonitor", text: dsl_template
+
+                    replace_string("dsl_livemonitor", 'livemonitortemplate','groovy' + job_name, "dsl_livemonitor")
+                    replace_string("dsl_livemonitor", '\\* \\* \\* \\* \\*','\\*/' + interval + ' \\* \\* \\* \\*', "dsl_livemonitor")
+                    jobDsl(lookupStrategy: 'SEED_JOB', removedJobAction: 'DELETE', removedViewAction: 'DELETE', targets: ['dsl_livemonitor'].join('\n'))
+
+                }
+            }
+        }
+    }
+}
+
